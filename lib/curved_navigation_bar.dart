@@ -9,6 +9,7 @@ typedef _LetIndexPage = bool Function(int value);
 
 class CurvedNavigationBar extends StatefulWidget {
   final List<Widget> items;
+  final List<Text> titles;
   final int index;
   final Color color;
   final Color? buttonBackgroundColor;
@@ -24,6 +25,7 @@ class CurvedNavigationBar extends StatefulWidget {
   CurvedNavigationBar({
     Key? key,
     required this.items,
+    required this.titles,
     this.index = 0,
     this.color = Colors.white,
     this.buttonBackgroundColor,
@@ -32,14 +34,15 @@ class CurvedNavigationBar extends StatefulWidget {
     _LetIndexPage? letIndexChange,
     this.animationCurve = Curves.easeOut,
     this.animationDuration = const Duration(milliseconds: 600),
-    this.height = 75.0,
+    this.height = 100.0,
     this.maxWidth,
     this.customFab,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
-        assert(0 <= height && height <= 75.0),
+        assert(0 <= height && height <= 100.0),
         assert(maxWidth == null || 0 <= maxWidth),
+        assert(items.length == titles.length),
         super(key: key);
 
   @override
@@ -103,8 +106,9 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
   @override
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
-    return SizedBox(
+    return Container(
       height: widget.height,
+      color: Colors.red,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final maxWidth = min(
@@ -124,6 +128,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                   clipBehavior: Clip.none,
                   alignment: Alignment.bottomCenter,
                   children: <Widget>[
+                    /// FAB
                     Positioned(
                       bottom: -40 - (75.0 - widget.height),
                       left: textDirection == TextDirection.rtl
@@ -153,18 +158,44 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                         ),
                       ),
                     ),
+
+                    /// Curved Background
                     Positioned(
                       left: 0,
                       right: 0,
-                      bottom: 0 - (75.0 - widget.height),
+                      bottom: 0 - (100.0 - widget.height),
                       child: CustomPaint(
                         painter: NavCustomPainter(
                             _pos, _length, widget.color, textDirection),
                         child: Container(
-                          height: 75.0,
+                          height: 100.0,
                         ),
                       ),
                     ),
+
+                    /// Title
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0 - (105.0 - widget.height),
+                      child: SizedBox(
+                        height: 100.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: widget.titles.map(
+                            (title) {
+                              return Expanded(
+                                child: Center(
+                                  child: title,
+                                ),
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                    ),
+
+                    /// Icons
                     Positioned(
                       left: 0,
                       right: 0,

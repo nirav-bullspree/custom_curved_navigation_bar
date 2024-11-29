@@ -27,13 +27,13 @@ class NavCustomPainter extends CustomPainter {
         (loc + s * 0.20) * size.width,
         size.height * 0.05,
         loc * size.width,
-        size.height * 0.60,
+        size.height * 0.35,
         (loc + s * 0.50) * size.width,
-        size.height * 0.60,
+        size.height * 0.38,
       )
       ..cubicTo(
         (loc + s) * size.width,
-        size.height * 0.60,
+        size.height * 0.35,
         (loc + s - s * 0.20) * size.width,
         size.height * 0.05,
         (loc + s + 0.1) * size.width,
@@ -43,6 +43,7 @@ class NavCustomPainter extends CustomPainter {
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)
       ..close();
+
     canvas.drawPath(path, paint);
   }
 
