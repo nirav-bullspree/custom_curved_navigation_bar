@@ -19,6 +19,7 @@ class CurvedNavigationBar extends StatefulWidget {
   final Duration animationDuration;
   final double height;
   final double? maxWidth;
+  final Widget? fabChild;
 
   CurvedNavigationBar({
     Key? key,
@@ -33,6 +34,7 @@ class CurvedNavigationBar extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 600),
     this.height = 75.0,
     this.maxWidth,
+    this.fabChild,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
@@ -141,8 +143,8 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                             color: widget.buttonBackgroundColor ?? widget.color,
                             type: MaterialType.circle,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: _icon,
+                              padding: const EdgeInsets.all(18.0),
+                              child: widget.fabChild ?? _icon,
                             ),
                           ),
                         ),
