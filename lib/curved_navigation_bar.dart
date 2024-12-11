@@ -108,7 +108,15 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
     final textDirection = Directionality.of(context);
     return Container(
       height: widget.height,
-      color: Colors.red,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            spreadRadius: 1,
+          )
+        ],
+      ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final maxWidth = min(
