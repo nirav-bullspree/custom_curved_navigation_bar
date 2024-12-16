@@ -4,6 +4,7 @@ import 'package:curved_navigation_bar/src/nav_custom_clipper.dart';
 import 'package:flutter/material.dart';
 import 'src/nav_button.dart';
 import 'src/nav_custom_painter.dart';
+import 'package:collection/collection.dart';
 
 typedef _LetIndexPage = bool Function(int value);
 
@@ -21,6 +22,7 @@ class CurvedNavigationBar extends StatefulWidget {
   final double height;
   final double? maxWidth;
   final Widget? customFab;
+  final TextStyle? selectedTitleTextStyle;
 
   CurvedNavigationBar({
     Key? key,
@@ -37,6 +39,7 @@ class CurvedNavigationBar extends StatefulWidget {
     this.height = 100.0,
     this.maxWidth,
     this.customFab,
+    this.selectedTitleTextStyle,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
@@ -58,6 +61,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
   late Widget _icon;
   late AnimationController _animationController;
   late int _length;
+  late ValueNotifier _currentIndex;
 
   @override
   void initState() {
@@ -67,6 +71,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
     _pos = widget.index / _length;
     _startingPos = widget.index / _length;
     _endingIndex = widget.index;
+    _currentIndex = ValueNotifier(widget.index);
     _animationController = AnimationController(vsync: this, value: _pos);
     _animationController.addListener(() {
       setState(() {
@@ -190,14 +195,20 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                         height: 100.0,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: widget.titles.map(
-                            (title) {
-                              return Expanded(
-                                child: Center(
-                                  child: title,
+                          children: widget.titles.mapIndexed(
+                            (index, title) => Expanded(
+                              child: Center(
+                                child: ValueListenableBuilder(
+                                  valueListenable: _currentIndex,
+                                  builder: (context, value, child) => Text(
+                                    title.data!,
+                                    style: value == index
+                                        ? widget.selectedTitleTextStyle
+                                        : title.style,
+                                  ),
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           ).toList(),
                         ),
                       ),
@@ -246,6 +257,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
     setState(() {
       _startingPos = _pos;
       _endingIndex = index;
+      _currentIndex.value = index;
       _animationController.animateTo(newPosition,
           duration: widget.animationDuration, curve: widget.animationCurve);
     });
